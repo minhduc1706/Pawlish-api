@@ -31,7 +31,7 @@ export class AuthController {
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -46,10 +46,11 @@ export class AuthController {
 
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken: refreshTokenFromCookie } = req.cookies;
+      const cookies = req.cookies || {};
+      const refreshTokenFromCookie = cookies.refreshToken;
 
       if (!refreshTokenFromCookie) {
-        res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+        res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
         throw new AppError("Refresh token is missing", 401);
       }
 
@@ -57,7 +58,7 @@ export class AuthController {
 
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -66,7 +67,24 @@ export class AuthController {
         accessToken: tokens.accessToken,
       });
     } catch (error) {
-      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+      console.log("bi xoa refresh token nha")
+      // res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+      next(error);
+    }
+  }
+
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 0,
+      });
+  
+      res.status(200).json({
+        message: "Logged out successfully",
+      });
+    } catch (error) {
       next(error);
     }
   }

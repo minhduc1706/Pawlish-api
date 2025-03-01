@@ -26,6 +26,9 @@ export const authorized = (allowedRoles: string[]) => {
       req.user = decoded;
       next();
     } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return next(new AppError("Token expired", 401));
+      }
       return next(new AppError("Invalid token", 401));
     }
   };

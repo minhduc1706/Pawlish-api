@@ -11,7 +11,7 @@ export const generateAccessToken = (user: {
     { id: user._id, email: user.email, role: user.role },
     jwtConfig.accessTokenSecret,
     {
-      expiresIn: "30m",
+      expiresIn: "1d",
     }
   );
 };

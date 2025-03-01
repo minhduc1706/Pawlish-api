@@ -13,11 +13,13 @@ import vipRoute from "./vip.route";
 import invoiceRoute from "./invoice.route";
 import productRoute from "./product.route";
 import { authorized } from "../middleware/auth.middleware";
+import productCategoryRoute from "./product_category.route";
 
 const router = express.Router();
 
 router.use("/auth", authRoute);
 router.use("/user", userRoute);
+router.use("/product-category", productCategoryRoute);
 router.use("/product", productRoute);
 router.use("/cart", authorized(["customer"]), cartRoute);
 router.use("/services", serviceRoute);

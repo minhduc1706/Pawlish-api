@@ -5,7 +5,6 @@ export class UserController {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await UserService.getAllUsers();
-      console.log("Fetched Users:", users);
       res.status(200).json(users);
     } catch (error) {
       next(error);

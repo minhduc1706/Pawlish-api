@@ -6,22 +6,10 @@ import { AuthController } from "../controllers/auth.controller";
 
 const router = express.Router();
 const authController = new AuthController();
-const { login, refreshToken, register } = authController;
+const { login, refreshToken, register,logout } = authController;
 
-router.post(
-  "/register",
-  registerValidation,
-  handleValidationErrors,
-  register.bind(authController)
-);
-
-router.post(
-  "/login",
-  loginValidation,
-  handleValidationErrors,
-  login.bind(authController)
-);
-
-router.post("/refresh-token", refreshToken.bind(authController));
-
+router.post("/register", registerValidation, handleValidationErrors, register);
+router.post("/login", loginValidation, handleValidationErrors, login);
+router.post("/refresh-token", refreshToken);
+router.post("/logout", logout)
 export default router;

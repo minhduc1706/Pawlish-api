@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { IProductCategory } from '../interfaces/product_category.interface';
 
 const productCategorySchema: Schema<IProductCategory> = new Schema(

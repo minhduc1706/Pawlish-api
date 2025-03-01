@@ -10,13 +10,11 @@ import jwt from "jsonwebtoken";
 export class AuthService {
   static async register(email: string, password: string): Promise<IUser> {
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
       throw new AppError("Email already exists", 400);
     }
-
+    
     const hashedPassword = await hashPassword(password);
-
     const newUser = new User({
       email,
       password: hashedPassword,
@@ -30,36 +28,32 @@ export class AuthService {
 
   static async login(email: string, password: string) {
     const user = await User.findOne({ email });
-
-    if (!user) {
-      throw new AppError("Invalid email", 401);
+    if (!user) throw new AppError("Invalid email", 401);
+    if (!(await comparePasswords(password, user.password))) {
+      throw new AppError("Invalid password", 401);
     }
-
-    const isPasswordCorrect = await comparePasswords(password, user.password);
-    if (!isPasswordCorrect) {
-      throw new AppError("Invalid email or password", 401);
+    
+    if (user.devices.length >= 3) {
+      throw new AppError("Too many devices logged in. Log out from another device first.", 403);
     }
+    
+    const accessToken = generateAccessToken({ _id: user._id.toString(), email: user.email, role: user.role });
+    const refreshToken = await generateRefreshToken({ _id: user._id.toString() });
 
-    const accessToken = generateAccessToken({
-      _id: user._id.toString(),
-      email: user.email,
-      role: user.role,
+    const refreshTokenModel = new RefreshToken({
+      token: refreshToken,
+      user_id: user._id,
+      issuedAt: new Date(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
-
-    const refreshToken = await generateRefreshToken({
-      _id: user._id.toString(),
-    });
+    await refreshTokenModel.save();
 
     return { accessToken, refreshToken, user };
   }
 
   static async refreshToken(userRefreshToken: string) {
-    const existingToken = await RefreshToken.findOne({
-      token: userRefreshToken,
-    });
-    if (!existingToken) {
-      throw new AppError("Invalid refresh token", 403);
-    }
+    const existingToken = await RefreshToken.findOne({ token: userRefreshToken });
+    if (!existingToken) throw new AppError("Invalid refresh token", 403);
 
     if (new Date() > existingToken.expiresAt) {
       await RefreshToken.deleteOne({ token: userRefreshToken });
@@ -71,36 +65,34 @@ export class AuthService {
       await RefreshToken.deleteOne({ token: userRefreshToken });
       throw new AppError("Session expired. Please login again.", 401);
     }
-
-    let payload: { _id: string; email: string; role: string };
+    
     try {
-      payload = jwt.verify(userRefreshToken, jwtConfig.refreshTokenSecret) as {
-        _id: string;
-        email: string;
-        role: string;
-      };
+      const payload = jwt.verify(userRefreshToken, jwtConfig.refreshTokenSecret) as {id:string}
+      console.log("test payload ", payload)
+      const user = await User.findById(payload.id);
+      if (!user || user.status !== "active") {
+        await RefreshToken.deleteOne({ token: userRefreshToken });
+        throw new AppError("User not found or inactive", 403);
+      }
+      
+      await RefreshToken.deleteOne({ token: userRefreshToken });
+      
+      const newAccessToken = generateAccessToken({ _id: payload.id, email: user.email, role: user.role });
+      const newRefreshToken = await generateRefreshToken({ _id: payload.id });
+      
+      const newRefreshTokenModel = new RefreshToken({
+        token: newRefreshToken,
+        user_id: payload.id,
+        issuedAt: new Date(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      
+      await newRefreshTokenModel.save();
+      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
     } catch (error) {
+      console.error("JWT Verification Error:", error);
       await RefreshToken.deleteOne({ token: userRefreshToken });
       throw new AppError("Invalid or expired refresh token", 403);
     }
-
-    await RefreshToken.findOneAndDelete({ token: userRefreshToken });
-
-    const accessToken = generateAccessToken({
-      _id: payload._id,
-      email: payload.email,
-      role: payload.role,
-    });
-
-    const refreshToken = generateRefreshToken({ _id: payload._id });
-
-    const newRefreshTokenModel = new RefreshToken({
-      token: refreshToken,
-      user_id: payload._id,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    });
-
-    await newRefreshTokenModel.save();
-    return { accessToken, refreshToken };
   }
 }
