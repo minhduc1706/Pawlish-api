@@ -3,7 +3,7 @@ import { IProduct } from "../interfaces/product.interface";
 export class ProductService {
   static async getAllProducts(): Promise<IProduct[]> {
     try {
-      return await Product.find().populate("category_id", "name");
+      return await Product.find().populate("category_id", "name description");
     } catch (error) {
       throw new Error(`Error fetching products: ${error.message || error}`);
     }

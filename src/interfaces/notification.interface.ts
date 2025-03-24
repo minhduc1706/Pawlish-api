@@ -1,11 +1,15 @@
-import {Document } from 'mongoose';
-import { IUser } from './user.interface';
+import { Types } from "mongoose";
+import { IUser } from "./user.interface";
+import { IAppointment } from "./appointment.interface";
 
-export interface INotification extends Document {
-  user_id: IUser['_id'];
+export interface INotification {
+  _id: Types.ObjectId;
+  user_id?: IUser["_id"]
+  type: "new_appointment" | "cancelled_appointment" | "rescheduled_appointment" | "reminder" | "system";
   title: string;
-  content: string;
-  is_read: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  message: string;
+  isRead: boolean;
+  appointmentId?: IAppointment["_id"];
+  createdAt: Date;
+  updatedAt: Date;
 }

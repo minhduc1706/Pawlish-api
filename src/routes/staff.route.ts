@@ -1,0 +1,35 @@
+import express from "express";
+import { StaffController } from "../controllers/staff.controller";
+import { handleValidationErrors } from "../errors/handleValidationErrors";
+import { authorized } from "../middleware/auth.middleware";
+import { validateAddStaff, validateUpdateStaff } from "../validations/staffValidation";
+
+
+const router = express.Router();
+const controller = new StaffController();
+
+router.get("/", handleValidationErrors, controller.getStaffByService);
+router.get(
+  "/available-times",
+  handleValidationErrors,
+  controller.getAvailableTimes
+);
+
+router.get("/all", authorized(["admin"]), controller.getAllStaff); 
+router.post("/", authorized(["admin"]), validateAddStaff, handleValidationErrors, controller.addStaff);
+router.put(
+  "/:id",
+  authorized(["admin"]),
+  validateUpdateStaff,
+  handleValidationErrors,
+  controller.updateStaff
+);
+router.delete(
+  "/:id",
+  authorized(["admin"]),
+  handleValidationErrors,
+  controller.deleteStaff
+);
+
+
+export default router;

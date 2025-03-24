@@ -6,14 +6,14 @@ const productCategory = new ProductCategoryController();
 const {
   addCategory,
   deleteCategory,
-  getAllProducts,
-  getProductById,
+  getAllCategories,
+  getCategoryById,
   updateCategory,
 } = productCategory;
 
-router.get("/", getAllProducts);
+router.get("/", getAllCategories);
 router.post("/", addCategory);
-router.get("/:id", getProductById);
+router.get("/:id", getCategoryById);
 router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
 export default router;

@@ -1,11 +1,11 @@
-import { Schema, model, Document } from 'mongoose';
+import {  Document } from 'mongoose';
 
 export interface IService extends Document {
-  service_name: string;
-  description: string;
+  name: string;
   price: number;
   duration: number;
-  available: 'yes' | 'no';
-  created_at: Date;
-  updated_at: Date;
+  available: boolean;
+  category_id: IService['_id']
+  createdAt: Date;
+  updatedAt: Date;
 }

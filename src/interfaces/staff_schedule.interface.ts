@@ -1,11 +1,13 @@
 import { Schema, Document, model } from 'mongoose';
 import { IStaff } from './staff.interface';
+import { IService } from './service.interface';
 
 export interface IStaffSchedule extends Document {
   staff_id: IStaff['_id']
-  day_of_week: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-  start_time: string; 
-  end_time: string;
+  service_id: IService["_id"]
+  time: string;
+  duration: number;
+  isBooked: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -34,16 +34,6 @@ export class UserController {
     }
   }
 
-  async blockUser(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const user = await UserService.blockUser(id);
-      if (!user) return res.status(404).json({ message: "User not found" });
-      res.json({ message: "User blocked successfully", user });
-    } catch (error) {
-      next(error);
-    }
-  }
 
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {

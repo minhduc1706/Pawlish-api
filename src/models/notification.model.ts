@@ -1,16 +1,20 @@
-import { Schema, Document, model } from 'mongoose';
-import { INotification } from '../interfaces/notification.interface';
+import { Schema, model } from "mongoose";
+import { INotification } from "../interfaces/notification.interface";
 
-
-const notificationSchema:Schema<INotification> = new Schema(
+const notificationSchema: Schema<INotification> = new Schema(
   {
-    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user_id: { type: Schema.Types.ObjectId, ref: "User" }, 
+    type: {
+      type: String,
+      enum: ["new_appointment", "cancelled_appointment", "rescheduled_appointment", "reminder", "system"],
+      required: true,
+    },
     title: { type: String, required: true },
-    content: { type: String, required: true },
-    is_read: { type: Boolean, default: false },
+    message: { type: String, required: true }, 
+    isRead: { type: Boolean, default: false },
+    appointmentId: { type: Schema.Types.ObjectId, ref: "Appointment", required: false }, 
   },
   { timestamps: true }
 );
 
-export const Notification = model<INotification>('Notification', notificationSchema);
-
+export const Notification = model<INotification>("Notification", notificationSchema);

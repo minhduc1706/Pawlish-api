@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
@@ -7,10 +7,9 @@ export interface IUser extends Document {
   email: string;
   phone: string;
   address: string;
-  role: 'admin' | 'customer';
-  status: 'active' | 'inactive';
+  role: 'admin' | 'customer' | 'staff';
   refreshToken: string | null;
   devices: Array<{ ipAddress: string; userAgent: string }>;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

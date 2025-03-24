@@ -1,11 +1,14 @@
-import { Schema, model, Document } from "mongoose";
+import { Document } from "mongoose";
+import { IService } from "./service.interface";
+import { IUser } from "./user.interface";
 
 export interface IStaff extends Document {
+  _id: IUser["_id"];
   full_name: string;
   email: string;
-  phone: string;
-  role: "groomer" | "admin"| "vet";
+  phone?: string;
   salary: number;
-  status: 'active' | 'inactive';
-  updated_at: Date;
+  service_id: IService["_id"][];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

@@ -8,6 +8,6 @@ export interface IProduct extends Document {
   stock_quantity: number;
   imgUrl?: string;
   category_id: IProductCategory['_id'];
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

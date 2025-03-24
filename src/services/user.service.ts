@@ -1,5 +1,6 @@
 import { IUser } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
+import { AppointmentService } from "./appointment.service";
 
 export class UserService {
   static async getAllUsers(): Promise<IUser[]> {
@@ -12,14 +13,6 @@ export class UserService {
 
   static async updateUser(userId: string, updateData: Partial<IUser>) {
     return await User.findByIdAndUpdate(userId, updateData, { new: true });
-  }
-
-  static async blockUser(userId: string) {
-    return await User.findByIdAndUpdate(
-      userId,
-      { status: "block" },
-      { new: true }
-    );
   }
 
   static async deleteUser(userId: string) {

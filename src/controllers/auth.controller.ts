@@ -37,7 +37,7 @@ export class AuthController {
 
       res.status(200).json({
         accessToken,
-        user: { _id: user._id, email: user.email },
+        user: { _id: user._id, email: user.email, role: user.role },
       });
     } catch (error) {
       next(error);
@@ -67,8 +67,7 @@ export class AuthController {
         accessToken: tokens.accessToken,
       });
     } catch (error) {
-      console.log("bi xoa refresh token nha")
-      // res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
       next(error);
     }
   }

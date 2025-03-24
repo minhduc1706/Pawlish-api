@@ -27,9 +27,10 @@ export class AuthService {
   }
 
   static async login(email: string, password: string) {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }); 
     if (!user) throw new AppError("Invalid email", 401);
-    if (!(await comparePasswords(password, user.password))) {
+
+    if (await comparePasswords(password, user.password)) {
       throw new AppError("Invalid password", 401);
     }
     
@@ -70,10 +71,6 @@ export class AuthService {
       const payload = jwt.verify(userRefreshToken, jwtConfig.refreshTokenSecret) as {id:string}
       console.log("test payload ", payload)
       const user = await User.findById(payload.id);
-      if (!user || user.status !== "active") {
-        await RefreshToken.deleteOne({ token: userRefreshToken });
-        throw new AppError("User not found or inactive", 403);
-      }
       
       await RefreshToken.deleteOne({ token: userRefreshToken });
       

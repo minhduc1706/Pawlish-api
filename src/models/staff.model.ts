@@ -1,18 +1,14 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IStaff } from "../interfaces/staff.interface";
 
 const staffSchema: Schema<IStaff> = new Schema(
   {
-    full_name: { type: String },
-    email: { type: String, required: true },
+    _id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    full_name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     phone: { type: String },
-    role: {
-      type: String,
-      enum: ["groomer", "admin", "vet"],
-      required: true,
-    },
     salary: { type: Number, required: true },
-    status: { type: String, enum: ['active', 'block'] },
+    service_id: [{ type: Schema.Types.ObjectId, ref: "Service" }],
   },
   { timestamps: true }
 );

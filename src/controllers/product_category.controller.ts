@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ProductCategoryService } from "../services/product_category.service";
 
 export class ProductCategoryController {
-  async getAllProducts(req: Request, res: Response, next: NextFunction) {
+  async getAllCategories(req: Request, res: Response, next: NextFunction) {
     try {
       const categories = await ProductCategoryService.getAllCategories();
       res.status(200).json(categories);
@@ -20,7 +20,7 @@ export class ProductCategoryController {
     }
   }
 
-  async getProductById(req: Request, res: Response, next: NextFunction) {
+  async getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const category = await ProductCategoryService.getCategoryById(id);
