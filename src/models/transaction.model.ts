@@ -1,26 +1,19 @@
-import { Schema, model, Document } from "mongoose";
-import { ITransaction } from "../interfaces/transaction.interface";
+import { Schema, model } from "mongoose";
 
-const transactionSchema: Schema<ITransaction> = new Schema(
+const transactionSchema = new Schema(
   {
-    _id: { type: Schema.Types.ObjectId, ref: "Payment", required: true },
-    amount: { type: Number, required: true, min: 0 },
-    status: {
-      type: String,
-      enum: ["pending", "completed", "failed"],
-      default: "pending",
+    vnp_transaction_no: { type: String, required: true }, 
+    amount: { type: Number, required: true }, 
+    bank_code: { type: String }, 
+    card_type: { type: String }, 
+    pay_date: { type: Date },
+    status: { 
+      type: String, 
+      enum: ["completed", "failed"], 
+      default: "completed" 
     },
-    gateway: {
-      type: String,
-      enum: ["stripe", "paypal", "cash"],
-      required: true,
-    },
-    transaction_code: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-export const Transaction = model<ITransaction>(
-  "Transaction",
-  transactionSchema
-);
+export const Transaction = model("Transaction", transactionSchema);

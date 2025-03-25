@@ -10,5 +10,4 @@ router.post("/", authorized(["staff", "admin"]), payment.createPayment.bind(paym
 router.get("/customer", authorized(["staff", "admin"]),payment.getCustomerPayments.bind(payment));
 router.get("/", authorized(["staff", "admin"]),payment.getAllPayments.bind(payment));
 router.patch("/:id", authorized(["staff", "admin"]),payment.updatePayment.bind(payment));
-
 export default router;

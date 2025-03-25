@@ -4,7 +4,7 @@ import { IOrder } from "../interfaces/order.interface";
 const orderSchema: Schema<IOrder> = new Schema(
   {
     user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    order_date: { type: Date, required: true },
+    order_date: { type: Date, },
     total_amount: { type: Number, required: true },
     status: {
       type: String,
@@ -12,7 +12,7 @@ const orderSchema: Schema<IOrder> = new Schema(
       required: true,
     },
     supplier_id: { type: Schema.Types.ObjectId, ref: "Supplier" },
-    shipping_address: { type: String, required: true },
+    shipping_address: { type: String },
     expected_delivery_date: { type: Date },
     products: [
       {

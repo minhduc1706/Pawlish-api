@@ -1,11 +1,11 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 
-export interface ITransaction extends Document {
- _id: Types.ObjectId;
+export interface ITransaction {
+  _id:Types.ObjectId;
+  vnp_transaction_no: string;
   amount: number;
-  status: "pending" | "completed" | "failed";
-  gateway: "stripe" | "paypal" | "cash";
-  transaction_code: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  bank_code?: string;
+  card_type?: string;
+  pay_date?: Date;
+  status: "completed" | "failed";
 }

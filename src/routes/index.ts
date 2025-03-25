@@ -27,6 +27,8 @@ import ratingRoutes from "./rating.route";
 import adminRoute from "./admin/dashboard.route";
 import orderRoute from "./order.route";
 import supplierRoute from "./order.route";
+import orderPaymentRoute from "./order_payment.route";
+
 
 import { apiLimiter } from "../utils/rateLimit";
 
@@ -41,13 +43,14 @@ router.use("/staff", staffRoute);
 router.use("/ratings", ratingRoutes);
 router.use("/inventory", inventoryRoutes);
 router.use("/reports", reportRoute);
+router.use("/order-payment", orderPaymentRoute);
 router.use("/reviews", reviewRoute);
 router.use("/service-reviews", serviceReviewRoute);
 router.use("/contact-histories", contactHistoryRoute);
 router.use("/product-category",productCategoryRoute);
 router.use("/product", productRoute);
 router.use("/commissions", commissiontRoute);
-router.use("/cart", authorized(["customer"]), cartRoute);
+router.use("/cart", authorized(["customer"]),cartRoute);
 router.use("/service-category", serviceCategoryRoute);
 router.use("/services", serviceRoute);
 router.use("/appointments", appointmentRoute);

@@ -106,7 +106,7 @@ export class CartService {
       const products = await Product.find({ _id: { $in: productIds } });
 
       if (products.length !== items.length) {
-        throw new Error("Some products not found");
+        return { items: [], totalPrice: 0 };
       }
 
       let totalIncrement = 0;

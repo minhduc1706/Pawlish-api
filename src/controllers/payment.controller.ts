@@ -5,7 +5,7 @@ import { Types } from "mongoose";
 export class PaymentController {
   async createPayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user?.id
+      const userId = req.user?.id;
       const paymentData = { ...req.body, user_id: userId };
       const newPayment = await PaymentService.createPayment(paymentData);
       res.status(201).json(newPayment);
@@ -16,7 +16,7 @@ export class PaymentController {
 
   async getCustomerPayments(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user?.id
+      const userId = req.user?.id;
       const payments = await PaymentService.getCustomerPayments(userId);
       res.status(200).json(payments);
     } catch (error) {
@@ -40,7 +40,10 @@ export class PaymentController {
 
   async updatePayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const updatedPayment = await PaymentService.updatePayment(req.params.id, req.body);
+      const updatedPayment = await PaymentService.updatePayment(
+        req.params.id,
+        req.body
+      );
       if (!updatedPayment) {
         return res.status(404).json({ message: "Không tìm thấy thanh toán" });
       }
