@@ -44,4 +44,15 @@ export class OrderController {
       next(error);
     }
   }
+
+  async getCustomerOrders(req: Request, res: Response, next: NextFunction) {
+    const id = req.params.id;
+    try {
+      const orders = await OrderService.getCustomerOrders(id);
+      res.status(200).json(orders);
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }

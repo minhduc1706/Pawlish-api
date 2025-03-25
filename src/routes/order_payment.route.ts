@@ -11,5 +11,5 @@ router.post(
   orderPaymentController.createVNPayPayment.bind(orderPaymentController)
 );
 router.get("/vnpay_return", orderPaymentController.handleVNPayReturn);
-
+router.get("/:id", orderPaymentController.getOrderById.bind(orderPaymentController));
 export default router;

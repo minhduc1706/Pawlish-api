@@ -18,7 +18,7 @@ export class OrderPaymentService {
     ipAddr: string;
   }) {
     const { amount, orderId, userId, ipAddr } = data;
-    
+
     const date = moment().tz("Asia/Ho_Chi_Minh");
     const createDate = date.format("YYYYMMDDHHmmss");
     const expireDate = date.add(15, "minutes").format("YYYYMMDDHHmmss");
@@ -63,7 +63,6 @@ export class OrderPaymentService {
     return `${vnp_Url}?${new URLSearchParams(vnp_Params).toString()}`;
   }
 
-
   static async verifyVNPayReturn(vnpParams: { [key: string]: string }) {
     const secureHash = vnpParams["vnp_SecureHash"];
     delete vnpParams["vnp_SecureHash"];
@@ -106,4 +105,27 @@ export class OrderPaymentService {
     };
   }
 
+  static async getOrderById(
+    orderId: string,
+    userId?: string,
+    isAdmin: boolean = false
+  ) {
+    try {
+      const order = await OrderPayment.findById(orderId)
+        .populate("user_id", "username email")
+        .populate("products.productId");
+
+      if (!order) {
+        throw new Error("Order not found");
+      }
+
+      if (userId && order.user_id.toString() !== userId && !isAdmin) {
+        throw new Error("Unauthorized to access this order");
+      }
+
+      return order;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

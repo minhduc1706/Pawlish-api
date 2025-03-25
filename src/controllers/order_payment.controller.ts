@@ -52,27 +52,59 @@ export class OrderPaymentController {
   async handleVNPayReturn(req: Request, res: Response, next: NextFunction) {
     try {
       const vnpParams = req.query as { [key: string]: string };
-      console.log("VNPAY Return Params:", vnpParams); // Log để debug
+      console.log("VNPAY Return Params:", vnpParams);
 
       const result = await OrderPaymentService.verifyVNPayReturn(vnpParams);
 
       if (result.isValid && result.responseCode === "00") {
         const orderId = vnpParams["vnp_TxnRef"];
-        await Order.findByIdAndUpdate(orderId, { status: "paid" });
+        await Order.findByIdAndUpdate(orderId, { status: "shipped" });
 
-        // Redirect về frontend với thông tin thành công
         res.redirect(
           `http://localhost:5173/payment-result?vnp_ResponseCode=00&vnp_TxnRef=${orderId}`
         );
       } else {
-        // Redirect về frontend với thông tin thất bại
         res.redirect(
           `http://localhost:5173/payment-result?vnp_ResponseCode=${result.responseCode}`
         );
       }
     } catch (error) {
       console.error("Error handling VNPay return:", error);
-      res.redirect("http://localhost:5173/cart?vnp_ResponseCode=99"); // Lỗi hệ thống
+      res.redirect("http://localhost:5173/cart?vnp_ResponseCode=99");
+    }
+  }
+
+  async getOrderById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.id;
+      const userId = req.user?.id;
+      const isAdmin = req.user?.role === "admin";
+
+      if (!orderId) {
+        return res.status(400).json({ message: "Order ID is required" });
+      }
+
+      const order = await OrderPaymentService.getOrderById(
+        orderId,
+        userId,
+        isAdmin
+      );
+
+      res.status(200).json({
+        success: true,
+        data: order,
+      });
+    } catch (error: any) {
+      console.error(`Error fetching order with id ${req.params.id}:`, error);
+
+      if (error.message === "Order not found") {
+        return res.status(404).json({ message: error.message });
+      }
+      if (error.message === "Unauthorized to access this order") {
+        return res.status(403).json({ message: error.message });
+      }
+
+      next(error);
     }
   }
 }

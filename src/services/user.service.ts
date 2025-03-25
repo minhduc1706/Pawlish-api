@@ -8,7 +8,7 @@ export class UserService {
   }
 
   static async getUserById(userId: string): Promise<IUser | null> {
-    return await User.findById(userId);
+    return await User.findById(userId).select("full_name email address phone");
   }
 
   static async updateUser(userId: string, updateData: Partial<IUser>) {
