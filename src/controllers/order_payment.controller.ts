@@ -61,16 +61,16 @@ export class OrderPaymentController {
         await Order.findByIdAndUpdate(orderId, { status: "shipped" });
 
         res.redirect(
-          `http://localhost:5173/payment-result?vnp_ResponseCode=00&vnp_TxnRef=${orderId}`
+          `https://pawlish-client.vercel.app/payment-result?vnp_ResponseCode=00&vnp_TxnRef=${orderId}`
         );
       } else {
         res.redirect(
-          `http://localhost:5173/payment-result?vnp_ResponseCode=${result.responseCode}`
+          `https://pawlish-client.vercel.app/payment-result?vnp_ResponseCode=${result.responseCode}`
         );
       }
     } catch (error) {
       console.error("Error handling VNPay return:", error);
-      res.redirect("http://localhost:5173/cart?vnp_ResponseCode=99");
+      res.redirect("https://pawlish-client.vercel.app/cart?vnp_ResponseCode=99");
     }
   }
 
