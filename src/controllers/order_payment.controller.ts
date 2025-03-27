@@ -1,7 +1,10 @@
+import  dotenv  from 'dotenv';
 import { Request, Response, NextFunction } from "express";
 import { OrderPaymentService } from "../services/order_payment.service";
 import { Order } from "../models/order.model";
+dotenv.config();
 
+const FRONTEND_URL = process.env.FRONTEND_URL!;
 export class OrderPaymentController {
   async createVNPayPayment(req: Request, res: Response, next: NextFunction) {
     try {
@@ -61,16 +64,16 @@ export class OrderPaymentController {
         await Order.findByIdAndUpdate(orderId, { status: "shipped" });
 
         res.redirect(
-          `https://pawlish-client.vercel.app/payment-result?vnp_ResponseCode=00&vnp_TxnRef=${orderId}`
+          `${FRONTEND_URL}/payment-result?vnp_ResponseCode=00&vnp_TxnRef=${orderId}`
         );
       } else {
         res.redirect(
-          `https://pawlish-client.vercel.app/payment-result?vnp_ResponseCode=${result.responseCode}`
+          `${FRONTEND_URL}/payment-result?vnp_ResponseCode=${result.responseCode}`
         );
       }
     } catch (error) {
       console.error("Error handling VNPay return:", error);
-      res.redirect("https://pawlish-client.vercel.app/cart?vnp_ResponseCode=99");
+      res.redirect(`${FRONTEND_URL}/cart?vnp_ResponseCode=99`);
     }
   }
 

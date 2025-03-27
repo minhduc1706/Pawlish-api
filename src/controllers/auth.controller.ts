@@ -10,6 +10,7 @@ export class AuthController {
   ): Promise<void> {
     try {
       const { email, password } = req.body;
+      console.log('Request body:', req.body);
       const user = await AuthService.register(email, password);
 
       res.status(201).json({
