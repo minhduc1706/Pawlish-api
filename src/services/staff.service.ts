@@ -143,6 +143,7 @@ export class StaffService {
     await Staff.deleteOne({ _id: id });
   }
 
+  static async getCSKHStaff(): Promise<IStaff | null> {
+    return await Staff.findOne({ email: "cskh@example.com" });
+  }
 }
-
-

@@ -3,7 +3,7 @@ import { IService } from "./service.interface";
 import { IUser } from "./user.interface";
 
 export interface IStaff extends Document {
-  _id: IUser["_id"];
+  user_id: IUser["_id"];
   full_name: string;
   email: string;
   phone?: string;

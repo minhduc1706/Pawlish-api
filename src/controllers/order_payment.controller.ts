@@ -8,7 +8,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL!;
 export class OrderPaymentController {
   async createVNPayPayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const { amount, products } = req.body;
+      const { amount, products, appointment } = req.body;
       const userId = req.user?.id;
 
       if (

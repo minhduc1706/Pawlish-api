@@ -8,6 +8,7 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
     service_id: { type: Schema.Types.ObjectId, ref: "Service", required: true },
     date: { type: Date, required: true },
     time: { type: String, required: true },
+    amount:{type: Number, required: true},
     status: {
       type: String,
       enum: ["pending", "confirmed", "ongoing", "completed", "cancelled"],

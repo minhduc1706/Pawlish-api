@@ -3,7 +3,7 @@ import { IStaff } from "../interfaces/staff.interface";
 
 const staffSchema: Schema<IStaff> = new Schema(
   {
-    _id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     full_name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String },

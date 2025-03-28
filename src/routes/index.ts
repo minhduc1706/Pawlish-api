@@ -28,7 +28,7 @@ import adminRoute from "./admin/dashboard.route";
 import orderRoute from "./order.route";
 import supplierRoute from "./order.route";
 import orderPaymentRoute from "./order_payment.route";
-
+import chatRoute from './chat_message.route';
 
 import { apiLimiter } from "../utils/rateLimit";
 
@@ -37,6 +37,7 @@ const router = express.Router();
 // router.use(apiLimiter);
 router.use("/auth", authRoute);
 router.use("/users", userRoute);
+router.use("/chat", chatRoute);
 router.use("/suppliers", supplierRoute);
 router.use("/orders", orderRoute);
 router.use("/staff", staffRoute);
@@ -50,7 +51,7 @@ router.use("/contact-histories", contactHistoryRoute);
 router.use("/product-category",productCategoryRoute);
 router.use("/product", productRoute);
 router.use("/commissions", commissiontRoute);
-router.use("/cart", authorized(["customer"]),cartRoute);
+router.use("/cart",cartRoute);
 router.use("/service-category", serviceCategoryRoute);
 router.use("/services", serviceRoute);
 router.use("/appointments", appointmentRoute);

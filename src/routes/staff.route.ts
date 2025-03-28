@@ -15,7 +15,7 @@ router.get(
   controller.getAvailableTimes
 );
 
-router.get("/all", authorized(["admin"]), controller.getAllStaff); 
+router.get("/all", controller.getAllStaff); 
 router.post("/", authorized(["admin"]), validateAddStaff, handleValidationErrors, controller.addStaff);
 router.put(
   "/:id",
@@ -31,5 +31,5 @@ router.delete(
   controller.deleteStaff
 );
 
-
+router.get('/cskh', controller.getCSKHStaff.bind(controller));
 export default router;

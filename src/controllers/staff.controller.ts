@@ -63,4 +63,15 @@ export class StaffController {
       next(error);
     }
   }
+  async getCSKHStaff(req: Request, res: Response, next: NextFunction) {
+    try {
+      const cskhStaff = await StaffService.getCSKHStaff();
+      if (!cskhStaff) {
+        return res.status(404).json({ message: "CSKH staff not found" });
+      }
+      res.status(200).json({ staffId: cskhStaff._id });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

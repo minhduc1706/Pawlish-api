@@ -9,6 +9,7 @@ export interface IAppointment extends Document {
   service_id: IService["_id"];
   date: Date;
   time: string;
+  amount: number;
   status: "pending" | "confirmed" | "ongoing" | "completed" | "cancelled";
   staff_id?: IStaff["_id"];
   notes?: string;
