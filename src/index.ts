@@ -69,7 +69,7 @@ cron.schedule("*/10 * * * *", async () => {
 // Seed data (nếu cần)
 // seedDB();
 // seedAdmin();
-seedStaff();
+// seedStaff();
 app.use(errorHandler);
 
 httpServer.listen(PORT, () => {

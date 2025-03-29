@@ -49,6 +49,7 @@ export class OrderController {
     const id = req.params.id;
     try {
       const orders = await OrderService.getCustomerOrders(id);
+      console.log("dasdad", orders)
       res.status(200).json(orders);
     } catch (error) {
       next(error);

@@ -29,6 +29,7 @@ import orderRoute from "./order.route";
 import supplierRoute from "./order.route";
 import orderPaymentRoute from "./order_payment.route";
 import chatRoute from './chat_message.route';
+import servicePaymentRoute from "./service_payment.route";
 
 import { apiLimiter } from "../utils/rateLimit";
 
@@ -45,6 +46,7 @@ router.use("/ratings", ratingRoutes);
 router.use("/inventory", inventoryRoutes);
 router.use("/reports", reportRoute);
 router.use("/order-payment", orderPaymentRoute);
+router.use("/service-payment", servicePaymentRoute);
 router.use("/reviews", reviewRoute);
 router.use("/service-reviews", serviceReviewRoute);
 router.use("/contact-histories", contactHistoryRoute);

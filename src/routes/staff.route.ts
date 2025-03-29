@@ -31,5 +31,11 @@ router.delete(
   controller.deleteStaff
 );
 
+router.get(
+  "/me",
+  authorized(["staff"]), // Thêm middleware để chỉ staff truy cập được
+  controller.getStaffProfile // Sử dụng phương thức từ StaffController
+);
+
 router.get('/cskh', controller.getCSKHStaff.bind(controller));
 export default router;

@@ -15,6 +15,7 @@ export class UserController {
     try {
       const { id } = req.params;
       const user = await UserService.getUserById(id);
+      console.log("first", user);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }

@@ -66,10 +66,11 @@ export class AppointmentService {
     userId: string
   ): Promise<IAppointment[]> {
     const appointments = await Appointment.find({ user_id: userId })
-      .populate("user_id", "name phone email")
-      .populate("pet_id", "name type")
+      .populate("user_id", "full_name phone email")
+      .populate("pet_id", "name species")
       .populate("service_id", "name price duration")
-      .populate("staff_id", "name phone");
+      .populate("staff_id", "full_name phone")
+      .sort({ date: -1 });
 
     return appointments.length ? appointments : [];
   }
@@ -138,14 +139,14 @@ export class AppointmentService {
   }
 
   static async getAllAppointments(filters: {
-    date?: string; 
+    date?: string;
     endDate?: string;
     staffId?: string;
     status?: string;
   }): Promise<{ count: number; data: any[] }> {
     const { date, endDate, staffId, status } = filters;
     const query: any = {};
-  
+
     if (date) {
       let startDate: Date;
       if (date === "today") {
@@ -158,39 +159,37 @@ export class AppointmentService {
       }
       const startOfDay = new Date(startDate);
       startOfDay.setHours(0, 0, 0, 0);
-  
-      const endOfRange = endDate
-        ? new Date(endDate)
-        : new Date();
+
+      const endOfRange = endDate ? new Date(endDate) : new Date();
       if (endDate && isNaN(endOfRange.getTime())) {
         throw new AppError("Invalid endDate format", 400);
       }
       const endOfDay = new Date(endOfRange);
       endOfDay.setHours(23, 59, 59, 999);
-  
+
       query.date = { $gte: startOfDay, $lte: endOfDay };
     }
     if (staffId) query.staff_id = staffId;
     if (status) query.status = status;
-  
+
     const appointments = await Appointment.find(query)
-    .populate("user_id", "full_name phone email")
-    .populate("pet_id", "name species")
-    .populate({
-      path: "service_id",
-      select: "name duration price",
-      populate: {
-        path: "category_id",
-        select: "name",
-      },
-    })
-    .populate("staff_id", "name phone");
-  
+      .populate("user_id", "full_name phone email")
+      .populate("pet_id", "name species")
+      .populate({
+        path: "service_id",
+        select: "name duration price",
+        populate: {
+          path: "category_id",
+          select: "name",
+        },
+      })
+      .populate("staff_id", "name phone");
+
     const formattedAppointments = appointments.map((appt) => ({
       ...appt.toObject(),
       date: this.formatDate(appt.date),
     }));
-  
+
     return { count: appointments.length, data: formattedAppointments };
   }
 
@@ -233,10 +232,10 @@ export class AppointmentService {
     appointmentId: string
   ): Promise<IAppointment> {
     const appointment = await Appointment.findById(appointmentId)
-      .populate("user_id", "name phone email")
+      .populate("user_id", "full_name phone email")
       .populate("pet_id", "name type")
       .populate("service_id", "name price duration")
-      .populate("staff_id", "name phone");
+      .populate("staff_id", "full_name phone");
 
     if (!appointment) {
       throw new AppError("Appointment not found", 404);
@@ -262,7 +261,7 @@ export class AppointmentService {
 
     if (updateData.status === "ongoing") {
       const nowUtc = new Date();
-      updateData.actualStartTime = new Date(nowUtc.getTime()); 
+      updateData.actualStartTime = new Date(nowUtc.getTime());
     }
 
     const updatedAppointment = await Appointment.findByIdAndUpdate(

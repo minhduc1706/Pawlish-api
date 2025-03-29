@@ -17,7 +17,11 @@ export class OrderService {
     const orders = await Order.find({ user_id: objectId }).populate({
       path: "products.product_id",
       select: "name price imgUrl",
-    });
+    }).populate({
+      path: "user_id",
+      select: "full_name email",
+    }).lean().exec();
+    console.log(JSON.stringify(orders, null, 2));
     return orders;
   }
 }
